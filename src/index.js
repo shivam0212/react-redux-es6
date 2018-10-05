@@ -1,1 +1,15 @@
-//console.log("HI");
+import 'babel-polyfill';
+import React from 'react';
+import { render } from 'react-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+import './styles/styles.css';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import App from './components/app';
+
+const routes = (
+    <BrowserRouter>
+        <Route path="/" component={App} />
+    </BrowserRouter>
+);
+
+render(routes, document.getElementById('app'));
