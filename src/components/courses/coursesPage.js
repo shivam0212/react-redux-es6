@@ -2,53 +2,31 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as courseActions from '../../actions/courseActions';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router';
+import { withRouter } from 'react-router-dom';
+import CourseList from './courseList';
 
 class CoursesPage extends React.Component {
-
     constructor(props) {
         super(props);
-        this.state = {
-            course: {
-                title: ""
-            }
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.submitChange = this.submitChange.bind(this);
+        this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
     }
 
-    handleChange(e) {
-        let course = this.state.course;
-        course.title = e.target.value;
-        this.setState({ course: course });
-    }
-
-    submitChange() {
-        this.props.actions.createCourse(this.state.course);
-        let course = this.state.course;
-        course.title = "";
-        this.setState({ course: course });
-    }
-
-    courseRow(course, index) {
-        return <li key={index}>{course.title}</li>;
+    redirectToAddCoursePage() {
+        browserHistory.push("/course");
+        this.props.history.push("/course");
     }
 
     render() {
+        const { courses } = this.props;
         return (
             <div>
-                <h2>Add Course.</h2>
-                <input
-                    onChange={this.handleChange}
-                    value={this.state.course.title}
-                    type="text" />
-                <input
-                    onClick={this.submitChange}
-                    value="Add"
-                    type="submit" />
                 <h3>Courses.</h3>
-                <ul>
-                    {this.props.courses.map(this.courseRow)}
-                </ul>
+                <input type="submit"
+                    value="Add Course"
+                    className="btn btn-primary"
+                    onClick={this.redirectToAddCoursePage} />
+                <CourseList courses={courses} />
             </div>
         );
     }
@@ -62,14 +40,14 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        // createCourse: course =>dispatch(courseActions.createCourse(course))
         actions: bindActionCreators(courseActions, dispatch)
     };
 }
 
 CoursesPage.propTypes = {
     courses: PropTypes.array.isRequired,
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CoursesPage));
